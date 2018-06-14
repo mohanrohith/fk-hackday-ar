@@ -59,6 +59,7 @@
 <script src="../third_party/three.js/VRControls.js"></script>
 <script src="../third_party/three.js/OBJLoader.js"></script>
 <script src="../third_party/three.js/MTLLoader.js"></script>
+<script src="../third_party/three.js/TrackballControls.js"></script>
 <script src="../third_party/three.js/three.ar.js"></script>
 <script>
 
@@ -73,6 +74,8 @@ var renderer;
 var OBJ_PATH = './assets/images/CHAHIN_WOODEN_CHAIR.obj';
 var MTL_PATH = './assets/images/CHAHIN_WOODEN_CHAIR.mtl';
 var SCALE = 0.7;
+var reticle;
+var anchorManager;
 
 /**
  * Use the `getARDisplay()` utility to leverage the WebVR API
@@ -174,14 +177,27 @@ function init() {
         // perspective camera's depth planes and field of view matches
         // the physical camera on the device.
         camera = new THREE.ARPerspectiveCamera(vrDisplay, 60, window.innerWidth / window.innerHeight, 0.01, 100);
+        var mouseControls = new THREE.TrackballControls ( camera, renderer.domElement);
+        // Create our ARReticle, which will continuously fire `hitTest` to trace
+        // the detected surfaces
+//        reticle = new THREE.ARReticle(vrDisplay,
+//            0.03, // innerRadius
+//            0.04, // outerRadius
+//            0xff0077, // color
+//            0.25); // easing
+//        scene.add(reticle);
+
         // VRControls is a utility from three.js that applies the device's
         // orientation/position to the perspective camera, keeping our
         // real world and virtual world in sync.
         vrControls = new THREE.VRControls(camera);
-
+//        anchorManager = new THREE.ARAnchorManager(vrDisplay)
         // Bind our event handlers
         window.addEventListener('resize', onWindowResize, false);
         canvas.addEventListener('click', onClick, false);
+//        anchorManager.addEventListener('anchorsupdated', e => {
+//            e.anchors.forEach(obj => console.log('updated', obj));
+//        });
         update();
     }).catch(function(error) {
         alert(error);
