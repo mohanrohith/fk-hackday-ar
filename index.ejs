@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <title>three.ar.js - Reticle</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, user-scalable=no,
+    <title>three.ar.js - Reticle</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no,
   minimum-scale=1.0, maximum-scale=1.0">
   <style>
     body {
@@ -229,14 +230,36 @@ function update() {
   // Update our perspective camera's positioning
   vrControls.update(0.5, 0.5);
 
-  // Render our three.js virtual scene
-  renderer.clearDepth();
-  renderer.render(scene, camera);
+        var vrDisplay;
+        var vrControls;
+        var arView;
+        var canvas;
+        var camera;
+        var scene;
+        var renderer;
+        var model;
+        var shadowMesh;
+        var planeGeometry;
+        var light;
+        var directionalLight;
+        var OBJ_PATH = './assets/ArcticFox_Posed.obj';
+        var MTL_PATH = './assets/ArcticFox_Posed.mtl';
+        var SCALE = 0.1;
+        /**
+         * Use the `getARDisplay()` utility to leverage the WebVR API
+         * to see if there are any AR-capable WebVR VRDisplays. Returns
+         * a valid display if found. Otherwise, display the unsupported
+         * browser message.
+         */
+        THREE.ARUtils.getARDisplay().then(function (display) {
+            if (display) {
+                vrDisplay = display;
+                init();
+            } else {
+                THREE.ARUtils.displayUnsupportedMessage();
+            }
 
-  // Kick off the requestAnimationFrame to call this function
-  // when a new VRDisplay frame is rendered
-  vrDisplay.requestAnimationFrame(update);
-}
+        });
 
 /**
  * On window resize, update the perspective camera's aspect ratio,
