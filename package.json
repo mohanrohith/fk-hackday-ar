@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=dev webpack-dev-server --progress --mode development --config webpack.config.dev.js",
     "build": "webpack -p --progress --mode production --config webpack.config.build.js",
-    "serve": "npm run build && cp -R third_party dist && cd dist && python -m SimpleHTTPServer 8090"
+    "serve": "npm run build && cp -R third_party dist && cp -R assets dist && cd dist && python -m SimpleHTTPServer 8090"
   },
   "repository": {
     "type": "git",

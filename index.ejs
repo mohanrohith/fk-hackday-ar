@@ -68,7 +68,9 @@ var canvas;
 var camera;
 var scene;
 var renderer;
-
+var OBJ_PATH = './assets/images/CHAHIN_WOODEN_CHAIR.obj';
+var MTL_PATH = './assets/images/CHAHIN_WOODEN_CHAIR.mtl';
+var SCALE = 0.1;
 var reticle;
 
 /**
@@ -100,36 +102,51 @@ function init() {
   document.body.appendChild(canvas);
   scene = new THREE.Scene();
 
-  // Creating the ARView, which is the object that handles
-  // the rendering of the camera stream behind the three.js
-  // scene
-  arView = new THREE.ARView(vrDisplay, renderer);
+    THREE.ARUtils.loadModel({
+        objPath: OBJ_PATH,
+        mtlPath: MTL_PATH,
+        OBJLoader: undefined, // uses window.THREE.OBJLoader by default
+        MTLLoader: undefined, // uses window.THREE.MTLLoader by default
+    }).then(function(group) {
+        model = group;
+        // As OBJ models may contain a group with several meshes,
+        // we want all of them to cast shadow
+        model.children.forEach(function(mesh) { mesh.castShadow = true; });
+        model.scale.set(SCALE, SCALE, SCALE);
+        // Place the model very far to initialize
+        model.position.set(10000, 10000, 10000);
+        scene.add(model);
+        // Creating the ARView, which is the object that handles
+        // the rendering of the camera stream behind the three.js
+        // scene
+        arView = new THREE.ARView(vrDisplay, renderer);
 
-  // The ARPerspectiveCamera is very similar to THREE.PerspectiveCamera,
-  // except when using an AR-capable browser, the camera uses
-  // the projection matrix provided from the device, so that the
-  // perspective camera's depth planes and field of view matches
-  // the physical camera on the device.
-  camera = new THREE.ARPerspectiveCamera(vrDisplay, 60, window.innerWidth / window.innerHeight, 0.01, 100);
+        // The ARPerspectiveCamera is very similar to THREE.PerspectiveCamera,
+        // except when using an AR-capable browser, the camera uses
+        // the projection matrix provided from the device, so that the
+        // perspective camera's depth planes and field of view matches
+        // the physical camera on the device.
+        camera = new THREE.ARPerspectiveCamera(vrDisplay, 60, window.innerWidth / window.innerHeight, 0.01, 100);
 
-  // Create our ARReticle, which will continuously fire `hitTest` to trace
-  // the detected surfaces
-  reticle = new THREE.ARReticle(vrDisplay,
-                                0.03, // innerRadius
-                                0.04, // outerRadius
-                                0xff0077, // color
-                                0.25); // easing
-  scene.add(reticle);
+//        // Create our ARReticle, which will continuously fire `hitTest` to trace
+//        // the detected surfaces
+//        reticle = new THREE.ARReticle(vrDisplay,
+//            0.03, // innerRadius
+//            0.04, // outerRadius
+//            0xff0077, // color
+//            0.25); // easing
+//        scene.add(reticle);
 
-  // VRControls is a utility from three.js that applies the device's
-  // orientation/position to the perspective camera, keeping our
-  // real world and virtual world in sync.
-  vrControls = new THREE.VRControls(camera);
+        // VRControls is a utility from three.js that applies the device's
+        // orientation/position to the perspective camera, keeping our
+        // real world and virtual world in sync.
+        vrControls = new THREE.VRControls(camera);
 
-  // Bind our event handlers
-  window.addEventListener('resize', onWindowResize, false);
+        // Bind our event handlers
+        window.addEventListener('resize', onWindowResize, false);
 
-  update();
+        update();
+    });
 }
 
 /**
