@@ -229,7 +229,7 @@
             // the near or far planes have updated
             camera.updateProjectionMatrix();
             // Update our perspective camera's positioning
-            vrControls.update();
+            vrControls.update(.5, .5);
             // Render our three.js virtual scene
             renderer.clearDepth();
             renderer.render(scene, camera);
@@ -283,7 +283,7 @@
                 // the cube where the hit occurred
                 THREE.ARUtils.placeObjectAtHit(model,  // The object to place
                     hit,   // The VRHit object to move the cube to
-                    0.25,     // Easing value from 0 to 1; we want to move
+                    1,     // Easing value from 0 to 1; we want to move
                     // the cube directly to the hit position
                     true); // Whether or not we also apply orientation
                 // Rotate the model to be facing the user
@@ -294,8 +294,15 @@
                 model.rotation.set(0, angle, 0);
             }
 
-        }
-        function onTouchMove(e) {
+        };
+        function rotate(direction) {
+            if(direction){
+                model.rotation.y += 0.05;
+            } else {
+                model.rotation.y -= 0.05;
+            }
+        };
+        function drag(e){
             var x = e.targetTouches[0].clientX;
             var y = e.targetTouches[0].clientY;
             x = x / window.innerWidth;
@@ -325,13 +332,19 @@
                 0.25,     // Easing value from 0 to 1; we want to move
                 // the cube directly to the hit position
                 true); // Whether or not we also apply orientation
-            // Rotate the model to be facing the user
-            var angle = Math.atan2(
-                camera.position.x - model.position.x,
-                camera.position.z - model.position.z
-            );
-            // model.rotation.set(0, angle, 0);
-
+        };
+        var lasty = 0;
+        function onTouchMove(e) {
+            if (e.touches.length > 1){
+                if(e.targetTouches[0].clientY >lasty){
+                    rotate(true);
+                }else{
+                    rotate(false);
+                }
+                lasty = e.targetTouches[0].clientY
+            } else {
+                drag(e);
+            }
         }
 
     </script>
