@@ -195,6 +195,9 @@ function init() {
         // Bind our event handlers
         window.addEventListener('resize', onWindowResize, false);
         canvas.addEventListener('click', onClick, false);
+//        this.canvas.removeEventListener('touchstart', onTouchStart );
+        this.canvas.addEventListener('touchmove', onTouchMove );
+//        this.canvas.addEventListener('touchend', onTouchEnd );
 //        anchorManager.addEventListener('anchorsupdated', e => {
 //            e.anchors.forEach(obj => console.log('updated', obj));
 //        });
@@ -293,6 +296,18 @@ function onClick (e) {
         );
         model.rotation.set(0, angle, 0);
     }
+
+}
+function onTouchMove(e) {
+//    alert(e);
+//    var angle = Math.atan2(
+//        camera.position.x - model.position.x,
+//        camera.position.z - model.position.z
+//    );
+//    model.rotation.set(0, angle, 0);
+    var x = e.targetTouches[0].pageX;
+    var y = e.targetTouches[0].pageY;
+    model.position.set(x, y, 0);
 }
 
 </script>
