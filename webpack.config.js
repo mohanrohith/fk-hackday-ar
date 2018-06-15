@@ -34,6 +34,11 @@ module.exports = {
         }),
 
         new HtmlWebpackPlugin({
+            template: path.join(__dirname, 'ar.ejs'),
+            filename: 'ar.html',
+            title: appHtmlTitle
+        }),
+        new HtmlWebpackPlugin({
             template: path.join(__dirname, 'index.ejs'),
             title: appHtmlTitle
         })
